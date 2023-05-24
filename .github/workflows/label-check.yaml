@@ -27,7 +27,7 @@ jobs:
             --header 'authorization: Bearer ${{secrets.GITHUB_TOKEN}}' \
             --header 'content-type: application/json' \
             --data '{
-              "context": "Label Check",
+              "context": "Merge Block Check",
               "state": "pending",
               "description": "You can merge by removing `${{env.BLOCK_LABEL}}` label."
             }'
@@ -39,7 +39,7 @@ jobs:
             --header 'authorization: Bearer ${{secrets.GITHUB_TOKEN}}' \
             --header 'content-type: application/json' \
             --data '{
-              "context": "Label Check",
+              "context": "Merge Block Check",
               "state": "success",
               "description": "Can be merged. You can block this PR by adding `${{env.BLOCK_LABEL}}` label."
             }'
