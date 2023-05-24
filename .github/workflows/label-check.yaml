@@ -20,18 +20,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Set status check to pending
-        if: contains(github.event.pull_request.labels.*.name, env.BLOCK_LABEL) == false
-        run: |
-          curl --request POST \
-            --url https://api.github.com/repos/${{github.repository}}/statuses/${{github.event.pull_request.head.sha}} \
-            --header 'authorization: Bearer ${{secrets.GITHUB_TOKEN}}' \
-            --header 'content-type: application/json' \
-            --data '{
-              "context": "Label Check",
-              "state": "pending",
-              "description": "You can merge with `${{env.BLOCK_LABEL}}` label."
-            }'
-      - name: Set status check to success
         if: contains(github.event.pull_request.labels.*.name, env.BLOCK_LABEL) == true
         run: |
           curl --request POST \
@@ -40,6 +28,18 @@ jobs:
             --header 'content-type: application/json' \
             --data '{
               "context": "Label Check",
+              "state": "pending",
+              "description": "You can merge by removing `${{env.BLOCK_LABEL}}` label."
+            }'
+      - name: Set status check to success
+        if: contains(github.event.pull_request.labels.*.name, env.BLOCK_LABEL) == false
+        run: |
+          curl --request POST \
+            --url https://api.github.com/repos/${{github.repository}}/statuses/${{github.event.pull_request.head.sha}} \
+            --header 'authorization: Bearer ${{secrets.GITHUB_TOKEN}}' \
+            --header 'content-type: application/json' \
+            --data '{
+              "context": "Label Check",
               "state": "success",
-              "description": "Can be merged."
+              "description": "Can be merged. You can block this PR by adding `${{env.BLOCK_LABEL}}` label."
             }'
